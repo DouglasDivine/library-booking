@@ -1,12 +1,13 @@
 import React from "react";
+//import { useLocation } from "react-router-dom";
 import styled, { css, ThemeProvider } from "@wigxel/react-components";
 import Header from "../components/Header";
 import NavItem from "../components/NavItem";
-import { NotificationBar } from '../components/NotificationBar'
-import { IconLinks } from '../components/Icons';
-import { useLayout } from '../libs/LayoutStore';
-import { Light, Dark } from '../libs/Theme';
-import { navLinks } from '../libs/data/navigation';
+import { NotificationBar } from "../components/NotificationBar";
+import { IconLinks } from "../components/Icons";
+import { useLayout } from "../libs/LayoutStore";
+import { Light, Dark } from "../libs/Theme";
+import { navLinks } from "../libs/data/navigation";
 
 const SidebarStyle = styled.aside`
   top: 60px;
@@ -19,7 +20,7 @@ const SidebarStyle = styled.aside`
   justify-content: space-between;
   transition: width 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 
-  ${props =>
+  ${(props) =>
     props.expand &&
     css`
       width: 20vw;
@@ -31,34 +32,35 @@ const SidebarStyle = styled.aside`
   }
 `;
 
-export const SideBar = props => {
-	const { store } = useLayout()
+export const SideBar = (props) => {
+  const { store } = useLayout();
+
+  //const location = useLocation();
+
+  //const location = useLocation();
+
+  //const location = useLocation();
+
+  //const location = useLocation();
 
   return (
     <SidebarStyle expand={store.menuOpen} className="p-3">
       <nav className="-mx-3" style={{ minWidth: "250px" }}>
-        {navLinks.map((e, idx) => {
+        {navLinks.map((nav, idx) => {
           return (
             <NavItem
               key={idx}
-              activity={e.activity}
-              active={e.text === 'Dashboard'}
-              icon={<img src={e.icon} alt={e.text} />}
+              route={nav.route}
+              activity={nav.activity}
+              icon={<img src={nav.icon} alt="Icon" />}
             >
-              {e.text}
+              {nav.text}
             </NavItem>
           );
         })}
       </nav>
       <nav className="-mx-3" style={{ minWidth: "15rem" }}>
-        <NavItem
-          icon={
-            <img
-              src={IconLinks.Settings}
-              alt="Settings"
-            />
-          }
-        >
+        <NavItem icon={<img src={IconLinks.Settings} alt="Settings" />}>
           Settings
         </NavItem>
       </nav>
@@ -75,24 +77,24 @@ const MainArea = ({ children }) => {
 };
 
 const StyledLayout = styled.section`
-	background-color: ${props => props.theme.whitesmoke};
-`
+  background-color: ${(props) => props.theme.whitesmoke};
+`;
 
 const Layout = ({ children }) => {
-	const { store } = useLayout();
+  const { store } = useLayout();
 
   return (
-  	<ThemeProvider theme={store.isDarkMode ? Dark : Light }>
-	    <StyledLayout className="min-h-screen">
-	      <Header />
-	      <section className="flex">
-		      <SideBar expand={true}></SideBar>
-		      <div className="flex-1">
-			      <MainArea>{children}</MainArea>
-		      </div>
-		      <NotificationBar />
-	      </section>
-	    </StyledLayout>
+    <ThemeProvider theme={store.isDarkMode ? Dark : Light}>
+      <StyledLayout className="min-h-screen">
+        <Header />
+        <section className="flex">
+          <SideBar expand={true}></SideBar>
+          <div className="flex-1">
+            <MainArea>{children}</MainArea>
+          </div>
+          <NotificationBar />
+        </section>
+      </StyledLayout>
     </ThemeProvider>
   );
 };

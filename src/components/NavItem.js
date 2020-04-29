@@ -1,37 +1,41 @@
 import React from "react";
+import { Link, useLocation } from "react-router-dom";
 import styled, { css } from "@wigxel/react-components";
-import { useLayout } from '../libs/LayoutStore';
+import { useLayout } from "../libs/LayoutStore";
 import t from "prop-types";
 import { curry } from "ramda";
 
 const NavItemStyle = styled.li`
   font-family: 1em;
-  margin: .5rem  0;
-  padding: .5rem 0;
+  margin: 0.5rem 0;
+  padding: 0.5rem 0;
   transition: background-color 0.2s ease;
-  color: ${props => props.theme.textColor};
-	
-	${props => (props.isDarkMode && !props.active) && css`
-		.icon img {
-			filter: invert(1);
-		}
-	`}
+  color: ${(props) => props.theme.textColor};
+
+  ${(props) =>
+    props.isDarkMode &&
+    !props.active &&
+    css`
+      .icon img {
+        filter: invert(1);
+      }
+    `}
 
   span {
     font: medium 1rem "Helvetica Neue";
   }
 
-  ${props =>
+  ${(props) =>
     props.active &&
     css`
-	    color: dodgerblue;
-	    border-radius: 0 30px 30px 0;
+      color: dodgerblue;
+      border-radius: 0 30px 30px 0;
 
       .icon {
         background-color: #cee6ff;
       }
 
-      ${props =>
+      ${(props) =>
         props.showBg &&
         css`
           background-color: #cee6ff;
@@ -49,11 +53,11 @@ const IconStyle = styled.span`
     height: 40px;
     display: flex;
     position: relative;
-    margin: 0 .5rem;
+    margin: 0 0.5rem;
     align-items: center;
     border-radius: 25px;
     justify-content: center;
-		
+
     .a-badge {
       min-width: 20px;
       line-height: 20px;
@@ -68,10 +72,10 @@ const IconStyle = styled.span`
       right: 0;
       border-radius: 16px;
 
-      ${props =>
+      ${(props) =>
         props.bgColor &&
         css`
-          background-color: ${props => props.bgColor};
+          background-color: ${(props) => props.bgColor};
           color: white;
         `}
     }
@@ -102,28 +106,29 @@ export const Icon = ({ small, className, bgColor, activity, icon }) => {
   );
 };
 
-const NavItem = ({ icon, activity, active, children }) => {
-	const { store } = useLayout()
-
+const NavItem = ({ icon, route, activity, children }) => {
+  const { store } = useLayout();
+  const { pathname } = useLocation();
   return (
     <NavItemStyle
       showBg={store.menuOpen}
       isDarkMode={store.isDarkMode}
-      active={active}
+      active={pathname === route}
       className="nav-item w-full block px-3"
     >
-      <div className="w-full flex items-center">
+      <Link to={route} className="w-full flex items-center">
         <Icon activity={activity} icon={icon} />
         <span>{children}</span>
-      </div>
+      </Link>
     </NavItemStyle>
   );
 };
 
 NavItem.propTypes = {
+  active: t.bool,
   activity: t.number,
-  icon: t.element,
-  active: t.bool
+  icon: t.element.isRequired,
+  route: t.string.isRequired,
 };
 
 export default NavItem;
